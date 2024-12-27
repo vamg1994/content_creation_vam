@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 TEMPLATES_DIR = "templates"
-DEFAULT_TEMPLATES = ["LinkedIn_Carrousel_VAM", "Linkedin_carrousel_vam2"]
+DEFAULT_TEMPLATES = ["Linkedin_carousel_template"]
 
 def ensure_template_directory():
     """Ensure templates directory exists."""
