@@ -20,6 +20,7 @@ DEFAULT_IMAGE_SIZE = "1024x1024"
 MAX_TOKENS = 2000
 DEFAULT_LANGUAGE = "English"
 DEFAULT_NUM_SLIDES = 10
+DEFAULT_CAROUSEL_TYPE = "3-4 bullet points"
 
 class ImageResponse(TypedDict):
     url: str
@@ -198,7 +199,8 @@ def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE) -> str:
 def generate_carousel_content(
     topic: str,
     language: str = DEFAULT_LANGUAGE,
-    num_slides: int = DEFAULT_NUM_SLIDES
+    num_slides: int = DEFAULT_NUM_SLIDES,
+    carousel_type: str = DEFAULT_CAROUSEL_TYPE
 ) -> List[SlideContent]:
     """
     Generate content for carousel slides using OpenAI.
@@ -208,19 +210,23 @@ def generate_carousel_content(
         topic: The subject matter for the carousel
         language: Target language for the content
         num_slides: Number of slides to generate
+        carousel_type: Type of content structure for each slide
         
     Returns:
         List of SlideContent containing titles and bullet points
-        
-    Raises:
-        ValueError: If the API response is invalid or missing required fields
-        Exception: For other API-related errors
     """
     logger.info(f"Generating carousel content: {num_slides} slides about '{topic}' in {language}")
     
     try:
         language_prompt = ("in Spanish, using the dialect from Honduras" 
                          if language == "Spanish (Honduras)" else "in English")
+        
+        # Modify content guidelines based on carousel_type
+        content_format = {
+            "3-4 bullet points": "Include 3-4 concise bullet points per slide",
+            "2 Paragraphs": "Include 2 short paragraphs per slide",
+            "1 Paragraph + 3-4 bullet points": "Include 1 short paragraph followed by 3-4 concisebullet points per slide"
+        }.get(carousel_type, "Include 3-4 bullet points per slide")
         
         response = openai.chat.completions.create(
             model=OPENAI_MODEL,
@@ -231,7 +237,7 @@ def generate_carousel_content(
                         f"Create content for {num_slides} presentation slides {language_prompt}.\n"
                         "Follow these guidelines:\n"
                         "1. Each slide should have a clear, concise title\n"
-                        "2. Include 3-4 bullet points per slide\n"
+                        f"2. {content_format}\n"
                         "3. Maintain consistent narrative flow\n"
                         "4. Use professional language\n"
                         "Return a JSON object with this structure:\n"

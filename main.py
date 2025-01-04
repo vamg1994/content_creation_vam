@@ -112,6 +112,12 @@ with st.container():
                     template = uploaded_file.name.rsplit('.', 1)[0]
                     st.success(f"Template uploaded successfully: {template}")
 
+            carousel_type = st.selectbox(
+            "Select carousel content type per slide",
+            ["3-4 bullet points", "2 Paragraphs", "1 Paragraph + 3-4 bullet points"],
+            index=0,
+            key="carousel_type"
+        )
 # Generate button
 if st.button("Generate Content", disabled=not topic):
     with st.spinner("Generating content..."):
@@ -141,7 +147,7 @@ if st.button("Generate Content", disabled=not topic):
             elif output_format == "Carousel":
                 try:
                     logger.info("Generating carousel presentation")
-                    carousel_content = generate_carousel_content(topic, language)
+                    carousel_content = generate_carousel_content(topic, language, carousel_type=carousel_type)
                     
                     # Get template path based on selection
                     if template_option == "Upload Custom Template":
@@ -206,6 +212,7 @@ elif output_format == "Carousel":
             file_name=f"{topic.replace(' ', '_')}_presentation.pptx",
             mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
         )
+
 
 elif output_format == "LinkedIn Post":
     st.subheader("💼 LinkedIn Post")
