@@ -118,6 +118,16 @@ with st.container():
             index=0,
             key="carousel_type"
         )
+        if output_format == "LinkedIn Post":
+            post_type = st.selectbox(
+            "Select LinkedIn post type",
+            ["default", "set custom"],
+            index=0,
+            key="post_type"
+            )
+            
+            if post_type == "set custom":
+                custom_post = st.text_area("Enter your custom LinkedIn post as inspiration", placeholder="e.g., Aws vs Azure vs Google Cloud")
 # Generate button
 if st.button("Generate Content", disabled=not topic):
     with st.spinner("Generating content..."):
@@ -177,7 +187,8 @@ if st.button("Generate Content", disabled=not topic):
 
             elif output_format == "LinkedIn Post":
                 logger.info("Generating LinkedIn post")
-                linkedin_post = generate_linkedin_post(topic, language)
+                custom_post_content = custom_post if post_type == "set custom" else None
+                linkedin_post = generate_linkedin_post(topic, language, custom_post_content)
                 st.session_state.generated_content['linkedin'] = linkedin_post
                 logger.info("Successfully generated LinkedIn post")
 

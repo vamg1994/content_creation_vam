@@ -141,7 +141,7 @@ def generate_image_caption(image_description: str, max_length: int = 50) -> str:
         raise Exception(error_msg)
 
 @lru_cache(maxsize=50)
-def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE) -> str:
+def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_post: str = None) -> str:
     """
     Generate a professional LinkedIn post using OpenAI.
     Uses caching to avoid regenerating identical requests.
@@ -149,13 +149,10 @@ def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE) -> str:
     Args:
         topic: The subject matter for the post
         language: Target language for the post (default: English)
+        custom_post: Optional example post to use as inspiration (default: None)
         
     Returns:
         A formatted LinkedIn post string
-        
-    Raises:
-        ValueError: If the API response is invalid
-        Exception: For other API-related errors
     """
     logger.info(f"Generating LinkedIn post for topic: {topic} in {language}")
     
@@ -163,22 +160,31 @@ def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE) -> str:
         language_prompt = ("in Spanish, using the dialect from Honduras" 
                          if language == "Spanish (Honduras)" else "in English")
         
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    f"Act as a writing specialist for LinkedIn posts and create a professional LinkedIn post {language_prompt}. "
+                    "The post should be engaging, informative, and follow "
+                    "LinkedIn best practices including appropriate hashtags "
+                    "and clear paragraph breaks. "
+                    "Avoid using cliches or overused phrases. "
+                    "Avoid being too salesy or promotional. Use a human and conversational tone."
+                )
+            }
+        ]
+
+        if custom_post:
+            messages.append({
+                "role": "system",
+                "content": f"Use this post as inspiration for the style and format, mantaining the same rythm, tone and use correct spacing between each line: {custom_post}"
+            })
+
+        messages.append({"role": "user", "content": f"Write a LinkedIn post about: {topic}"})
+
         response = openai.chat.completions.create(
             model=OPENAI_MODEL,
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        f"Create a professional LinkedIn post {language_prompt}. "
-                        "The post should be engaging, informative, and follow "
-                        "LinkedIn best practices including appropriate hashtags "
-                        "and clear paragraph breaks."
-                        "Avoid using cliches or overused phrases."
-                        "Avoid being too salesy or promotional. Use a human and conversational tone."
-                    )
-                },
-                {"role": "user", "content": f"Write a LinkedIn post about: {topic}"}
-            ],
+            messages=messages,
             max_tokens=MAX_TOKENS,
             temperature=0.7
         )
@@ -225,7 +231,7 @@ def generate_carousel_content(
         content_format = {
             "3-4 bullet points": "Include 3-4 concise bullet points per slide",
             "2 Paragraphs": "Include 2 short paragraphs per slide",
-            "1 Paragraph + 3-4 bullet points": "Include 1 short paragraph followed by 3-4 concisebullet points per slide"
+            "1 Paragraph + 3-4 bullet points": "Include 1 short paragraph and 3 concise bullet points per slide"
         }.get(carousel_type, "Include 3-4 bullet points per slide")
         
         response = openai.chat.completions.create(
