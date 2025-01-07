@@ -127,7 +127,7 @@ with st.container():
             )
             
             if post_type == "set custom":
-                custom_post = st.text_area("Enter your custom LinkedIn post as inspiration", placeholder="e.g., Aws vs Azure vs Google Cloud")
+                custom_post = st.text_area("Enter your custom LinkedIn post as inspiration", placeholder="e.g., Enter a post that you want to use as inspiration")
 # Generate button
 if st.button("Generate Content", disabled=not topic):
     with st.spinner("Generating content..."):
