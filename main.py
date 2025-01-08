@@ -188,24 +188,13 @@ if st.button("Generate Content", disabled=not topic):
                     st.session_state.generated_content['carousel'] = None
 
             elif output_format == "LinkedIn Post":
-                logger.info("Generating LinkedIn post")
+                logger.info("Generating LinkedIn post") #this is the post that will be generated
                 custom_post_content = custom_post if post_type == "set custom" else None
                 linkedin_post = generate_linkedin_post(topic, language, custom_post_content)
                 st.session_state.generated_content['linkedin'] = linkedin_post
                 logger.info("Successfully generated LinkedIn post")
 
             elif output_format == "Ideas":
-                st.subheader("💡 Content Ideas")
-                if st.session_state.generated_content.get('ideas'):
-                    with st.expander("View Content Ideas", expanded=True):
-                        st.markdown(st.session_state.generated_content['ideas'])
-                        st.download_button(
-                            label="Download Ideas",
-                            data=st.session_state.generated_content['ideas'],
-                            file_name=f"{topic.replace(' ', '_')}_content_ideas.txt",
-                            mime="text/plain"
-                        )
-
                 logger.info("Generating content ideas")
                 ideas = generate_ideas(topic, language)
                 st.session_state.generated_content['ideas'] = ideas
@@ -253,6 +242,18 @@ elif output_format == "LinkedIn Post":
                 label="Download LinkedIn Post",
                 data=st.session_state.generated_content['linkedin'],
                 file_name=f"{topic.replace(' ', '_')}_linkedin_post.txt",
+                mime="text/plain"
+            )
+            
+elif output_format == "Ideas":
+    st.subheader("💡 Content Ideas")
+    if st.session_state.generated_content['ideas']:
+        with st.expander("View Content Ideas", expanded=True):
+            st.markdown(st.session_state.generated_content['ideas'])
+            st.download_button(
+                label="Download Ideas",
+                data=st.session_state.generated_content['ideas'],
+                file_name=f"{topic.replace(' ', '_')}_content_ideas.txt",
                 mime="text/plain"
             )
 
