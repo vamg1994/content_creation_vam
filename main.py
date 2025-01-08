@@ -8,7 +8,8 @@ from utils.api import (
     generate_images,
     generate_image_caption,
     generate_linkedin_post,
-    generate_carousel_content
+    generate_carousel_content,
+    generate_ideas
 )
 from utils.ppt import create_carousel_presentation
 from utils.template_manager import initialize_templates, get_available_templates
@@ -47,7 +48,8 @@ if 'generated_content' not in st.session_state:
     st.session_state.generated_content = {
         'images': None,
         'carousel': None,
-        'linkedin': None
+        'linkedin': None,
+        'ideas': None
     }
 
 
@@ -81,7 +83,7 @@ with st.container():
     with col3:
         output_format = st.selectbox(
             "Select output format",
-            ["Images", "Carousel", "LinkedIn Post"],
+            ["Images", "Carousel", "LinkedIn Post", "Ideas"],
             index=0,
             key="output_format"
         )
@@ -191,6 +193,23 @@ if st.button("Generate Content", disabled=not topic):
                 linkedin_post = generate_linkedin_post(topic, language, custom_post_content)
                 st.session_state.generated_content['linkedin'] = linkedin_post
                 logger.info("Successfully generated LinkedIn post")
+
+            elif output_format == "Ideas":
+                st.subheader("💡 Content Ideas")
+                if st.session_state.generated_content.get('ideas'):
+                    with st.expander("View Content Ideas", expanded=True):
+                        st.markdown(st.session_state.generated_content['ideas'])
+                        st.download_button(
+                            label="Download Ideas",
+                            data=st.session_state.generated_content['ideas'],
+                            file_name=f"{topic.replace(' ', '_')}_content_ideas.txt",
+                            mime="text/plain"
+                        )
+
+                logger.info("Generating content ideas")
+                ideas = generate_ideas(topic, language)
+                st.session_state.generated_content['ideas'] = ideas
+                logger.info("Successfully generated content ideas")
 
         except ValueError as e:
             logger.error(f"Configuration error: {str(e)}")

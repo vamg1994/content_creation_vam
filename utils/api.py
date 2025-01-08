@@ -5,6 +5,7 @@ from typing import List, Dict, Optional, TypedDict
 from functools import lru_cache
 from openai import OpenAI
 from datetime import datetime, timedelta
+import requests
 
 # Configure logging with more detailed format
 logging.basicConfig(
@@ -37,6 +38,12 @@ if not OPENAI_API_KEY:
     raise ValueError("OpenAI API key is required")
 
 openai = OpenAI(api_key=OPENAI_API_KEY)
+
+# Add this constant with the other constants
+PERPLEXITY_API_KEY = os.environ.get("PERPLEXITY_API_KEY")
+if not PERPLEXITY_API_KEY:
+    logger.error("Perplexity API key is not set in environment variables.")
+    raise ValueError("Perplexity API key is required")
 
 @lru_cache(maxsize=100)
 def generate_images(topic: str, limit: int = 3) -> List[ImageResponse]:
@@ -299,5 +306,69 @@ def generate_carousel_content(
         raise ValueError(error_msg)
     except Exception as e:
         error_msg = f"Failed to generate carousel content: {str(e)}"
+        logger.error(error_msg, exc_info=True)
+        raise Exception(error_msg)
+
+@lru_cache(maxsize=50)
+def generate_ideas(topic: str, language: str = DEFAULT_LANGUAGE) -> str:
+    """
+    Generate content ideas using Perplexity API.
+    
+    Args:
+        topic: The subject matter for idea generation
+        language: Target language for the ideas
+        
+    Returns:
+        A formatted string containing generated ideas
+    """
+    logger.info(f"Generating ideas for topic: {topic} in {language}")
+    
+    try:
+        url = "https://api.perplexity.ai/chat/completions"
+        
+        language_instruction = ("in Spanish, using the dialect from Honduras" 
+                              if language == "Spanish (Honduras)" else "in English")
+        
+        payload = {
+            "model": "llama-3.1-sonar-small-128k-online",
+            "messages": [
+                {
+                    "role": "system",
+                    "content": (
+                        f"You are a creative content strategist. Generate 10 unique content ideas {language_instruction} "
+                        "for the given topic. Each idea should be creative, specific, and actionable. "
+                        "Format the response with bullet points and include a brief description for each idea."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": f"Generate content ideas for: {topic}"
+                }
+            ],
+            "temperature": 0.7,
+            "top_p": 0.9,
+            "return_images": False,
+            "return_related_questions": False,
+            "stream": False
+        }
+        
+        headers = {
+            "Authorization": f"Bearer {PERPLEXITY_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        
+        response = requests.post(url, json=payload, headers=headers)
+        response.raise_for_status()
+        
+        content = response.json()
+        if not content.get('choices') or not content['choices'][0].get('message', {}).get('content'):
+            raise ValueError("No content generated in API response")
+            
+        ideas = content['choices'][0]['message']['content']
+        logger.info("Successfully generated ideas")
+        return ideas
+        
+    except requests.exceptions.RequestException as e:
+        error_msg = f"Failed to generate ideas via Perplexity API: {str(e)}"
         logger.error(error_msg, exc_info=True)
         raise Exception(error_msg)
