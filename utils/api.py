@@ -530,9 +530,11 @@ def generate_ideas(topic: str, language: str = DEFAULT_LANGUAGE) -> str:
                 {
                     "role": "system",
                     "content": (
-                        f"You are a creative content strategist. Generate 10 unique content ideas {language_instruction} "
-                        "for the given topic. Each idea should be creative, specific, and actionable. "
-                        "Format the response with bullet points and include a brief description for each idea."
+                        f"Generate relevant ideas: Provide 3 creative approaches to the topic, considering storytelling, lists, or reflections. In this language:{language_instruction} "
+                        "Create a strong hook: Suggest 2-3 opening lines designed to capture immediate attention."
+                        "Call to action: Include a CTA that encourages interaction or invites reflection. Suggest 2-3 closing lines"
+                        "Use recent news and events for reference when creating the ideas, hook and CTA. Provide a brief explanation of why it's relevant and links to the source"
+                        "Use examples {example_posts} for reference when creating the ideas, hook and CTA"
                     )
                 },
                 {
@@ -540,7 +542,7 @@ def generate_ideas(topic: str, language: str = DEFAULT_LANGUAGE) -> str:
                     "content": f"Generate content ideas for: {topic}"
                 }
             ],
-            "temperature": 0.7,
+            "temperature": 0.5,
             "top_p": 0.9,
             "return_images": False,
             "return_related_questions": False,
