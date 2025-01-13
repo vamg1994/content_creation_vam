@@ -147,6 +147,68 @@ def generate_image_caption(image_description: str, max_length: int = 50) -> str:
         logger.error(error_msg, exc_info=True)
         raise Exception(error_msg)
 
+example_posts = """
+Ejemplo 1 (Inglés)
+I’ve grown my network to 36K+ in 2024
+
+Here’s how you can build yours in 2025:
+
+1. Start with likes
+↳ Likes are the easiest way to get noticed
+
+2. Drop comments
+↳ Shows support and makes you likeable
+
+3. Build your tribe
+↳ Connect with people who interact with you
+
+4. Slide into DMs
+↳ Start a conversation with a kind message
+
+5. Go for a coffee
+↳ Build trust and support each other's goals
+
+6. Team up
+↳ Collaborate on posts to reach new people
+
+Networking isn’t just adding numbers.
+
+It’s building relationships that matter.
+
+P.S. Want to grow on LinkedIn?
+
+Follow me → Daniel
+
+
+Ejemplo 2 (Español)
+
+Nunca hay que parar de formarse...
+
+
+Y más cuando estás empezando tu Startup (es un buen reto).
+
+Ayer le di una vuelta a mis KPIs, y aprendí lo siguiente:
+
+Tienen que ser:
+
+- Medibles y entendibles
+- Transparentes
+- Ambiciosos pero realistas
+- Vinculados a la NSM (North Star Metric)
+- En un horizonte temporal
+- Revisables
+
+En nuestro caso al ser un SaaS, podríamos definir:
+
+Captar 500 usuarios de pago en los primeros 3 meses tras el lanzamiento.
+
+Tengo que seguir dándole vueltas, la semana que viene os cuento por donde pueden ir los tiros.
+
+Hay que actuar, pero hay que formarse también.
+
+Si puedes evitar cagarla, mejor ;)
+"""
+
 @lru_cache(maxsize=50)
 def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_post: str = None) -> str:
     """
@@ -171,12 +233,14 @@ def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_
             {
                 "role": "system",
                 "content": (
-                    f"Act as a writing specialist for LinkedIn posts and create a professional LinkedIn post {language_prompt}. "
+                    f"Act as a writing specialist for LinkedIn posts and create an engaging LinkedIn post {language_prompt}. "
                     "The post should be engaging, informative, and follow "
-                    "LinkedIn best practices including appropriate hashtags "
+                    "Do not use hashtags "
                     "and clear paragraph breaks. "
                     "Avoid using cliches or overused phrases. "
                     "Avoid being too salesy or promotional. Use a human and conversational tone."
+                    "CTA should be a reflection of the post or a conclusion, not a sales pitch."
+                    "Use this examples as a reference for the style, tone and format: {example_posts}"
                 )
             }
         ]
@@ -252,7 +316,9 @@ def generate_carousel_content(
                         "1. Each slide should have a clear, concise title\n"
                         f"2. {content_format}\n"
                         "3. Maintain consistent narrative flow\n"
-                        "4. Use professional language\n"
+                        "4. Use informative, educational and engaging language\n"
+                        "5. Use storytelling\n"
+                        "6. Give real examples\n"
                         "Return a JSON object with this structure:\n"
                         '{"slides": [{"title": "string", "points": ["string"]}]}'
                     )
