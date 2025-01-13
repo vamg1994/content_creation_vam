@@ -355,8 +355,8 @@ def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_
     logger.info(f"Generating LinkedIn post for topic: {topic} in {language}")
     
     try:
-        language_prompt = ("in Spanish, using the dialect from Honduras" 
-                         if language == "Spanish (Honduras)" else "in English")
+        language_prompt = ("in Spanish, using neutral dialect" 
+                         if language == "Spanish (Neutral)" else "in English")
         
         messages = [
             {
@@ -427,8 +427,8 @@ def generate_carousel_content(
     logger.info(f"Generating carousel content: {num_slides} slides about '{topic}' in {language}")
     
     try:
-        language_prompt = ("in Spanish, using the dialect from Honduras" 
-                         if language == "Spanish (Honduras)" else "in English")
+        language_prompt = ("in Spanish, using neutral dialect" 
+                         if language == "Spanish (Neutral)" else "in English")
         
         # Modify content guidelines based on carousel_type
         content_format = {
@@ -525,8 +525,8 @@ def generate_ideas(topic: str, language: str = DEFAULT_LANGUAGE, context: str = 
     try:
         url = "https://api.perplexity.ai/chat/completions"
         
-        language_instruction = ("in Spanish, using the dialect from Honduras" 
-                              if language == "Spanish (Honduras)" else "in English")
+        language_instruction = ("in Spanish, using neutral dialect" 
+                              if language == "Spanish (Neutral)" else "in English")
         
         payload = {
             "model": "llama-3.1-sonar-small-128k-online",
