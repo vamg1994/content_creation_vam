@@ -86,7 +86,7 @@ with st.container():
     with col2:
         language = st.selectbox(
             "Select language",
-            ["English", "Spanish (Neutral)", "Spanish (Honduras)", "Spanish (Spain)","English (UK)","French", "German", "Italian"],
+            ["English", "Spanish (Neutral)"],
             index=0
         )
     col3, col4 = st.columns(2)
