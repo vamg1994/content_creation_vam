@@ -22,6 +22,7 @@ MAX_TOKENS = 2000
 DEFAULT_LANGUAGE = "English"
 DEFAULT_NUM_SLIDES = 10
 DEFAULT_CAROUSEL_TYPE = "3-4 bullet points"
+CONTEXT = ""
 
 class ImageResponse(TypedDict):
     url: str
@@ -338,7 +339,7 @@ They are winning the AI race.
 """
 
 @lru_cache(maxsize=50)
-def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_post: str = None) -> str:
+def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_post: str = None, context: str = CONTEXT) -> str:
     """
     Generate a professional LinkedIn post using OpenAI.
     Uses caching to avoid regenerating identical requests.
@@ -347,7 +348,7 @@ def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_
         topic: The subject matter for the post
         language: Target language for the post (default: English)
         custom_post: Optional example post to use as inspiration (default: None)
-        
+        context: Optional context for the post (default: CONTEXT)
     Returns:
         A formatted LinkedIn post string
     """
@@ -369,6 +370,7 @@ def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_
                     "Call to action: include a CTA that encourages interaction or invites reflection."
                     "Avoid questions in the CTA; instead, include reflections or conclusions."
                     f"Use this examples as a reference for the style and tone: {example_posts}"
+                    f"Use this context for the post: {CONTEXT}"
                     "Final Check: Before finishing, ensure the content has: 1)An engaging hook. 2)A flexible and coherent structure using short sentences without paragraphs. 3)A compelling CTA."
                 )
             }
@@ -544,7 +546,7 @@ def generate_ideas(topic: str, language: str = DEFAULT_LANGUAGE) -> str:
                     "content": f"Generate content ideas for: {topic}"
                 }
             ],
-            "temperature": 0.5,
+            "temperature": 0.7,
             "top_p": 0.9,
             "return_images": False,
             "return_related_questions": False,
