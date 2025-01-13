@@ -22,7 +22,6 @@ MAX_TOKENS = 2000
 DEFAULT_LANGUAGE = "English"
 DEFAULT_NUM_SLIDES = 10
 DEFAULT_CAROUSEL_TYPE = "3-4 bullet points"
-CONTEXT = ""
 
 class ImageResponse(TypedDict):
     url: str
@@ -339,7 +338,7 @@ They are winning the AI race.
 """
 
 @lru_cache(maxsize=50)
-def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_post: str = None) -> str:
+def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_post: str = None, context: str = "") -> str:
     """
     Generate a professional LinkedIn post using OpenAI.
     Uses caching to avoid regenerating identical requests.
@@ -370,6 +369,7 @@ def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_
                     "Call to action: include a CTA that encourages interaction or invites reflection."
                     "Avoid questions in the CTA; instead, include reflections or conclusions."
                     f"Use this examples as a reference for the style and tone: {example_posts}"
+                    f"Adapt the content to this specific context: {context}"
                     "Final Check: Before finishing, ensure the content has: 1)An engaging hook. 2)A flexible and coherent structure using short sentences without paragraphs. 3)A compelling CTA."
                 )
             }
@@ -387,7 +387,7 @@ def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_
             model=OPENAI_MODEL,
             messages=messages,
             max_tokens=MAX_TOKENS,
-            temperature=0.45
+            temperature=0.7
         )
         
         if not response.choices:
@@ -407,7 +407,8 @@ def generate_carousel_content(
     topic: str,
     language: str = DEFAULT_LANGUAGE,
     num_slides: int = DEFAULT_NUM_SLIDES,
-    carousel_type: str = DEFAULT_CAROUSEL_TYPE
+    carousel_type: str = DEFAULT_CAROUSEL_TYPE,
+    context: str = ""
 ) -> List[SlideContent]:
     """
     Generate content for carousel slides using OpenAI.
@@ -443,6 +444,7 @@ def generate_carousel_content(
                     "content": (
                         f"Create content for {num_slides} presentation slides {language_prompt}.\n"
                         "Follow these guidelines:\n"
+                        f"Consider this context for content generation: {context}\n"
                         "1. Each slide should have a clear, concise title\n"
                         f"2. {content_format}\n"
                         "3. Maintain consistent narrative flow\n"
@@ -506,7 +508,7 @@ def generate_carousel_content(
         raise Exception(error_msg)
 
 @lru_cache(maxsize=50)
-def generate_ideas(topic: str, language: str = DEFAULT_LANGUAGE) -> str:
+def generate_ideas(topic: str, language: str = DEFAULT_LANGUAGE, context: str = "") -> str:
     """
     Generate content ideas using Perplexity API.
     
@@ -532,6 +534,7 @@ def generate_ideas(topic: str, language: str = DEFAULT_LANGUAGE) -> str:
                     "role": "system",
                     "content": (
                         f"Generate relevant ideas: Provide 3 creative approaches to the topic, considering storytelling, lists, or reflections."
+                        f"Condider this context: {context}\n"
                         f"Write everything (ideas, hook, CTA) in this language:{language_instruction} "
                         "Create a strong hook: Suggest 2-3 opening lines designed to capture immediate attention."
                         "Call to action: Include a CTA that encourages interaction or invites reflection. Suggest 2-3 closing lines"

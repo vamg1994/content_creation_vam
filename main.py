@@ -61,11 +61,17 @@ with st.sidebar:
     ### virgiliomadrid1994@gmail.com
     ### https://www.linkedin.com/in/vamadrid/
     """)
+    
+
 
 # Title and description
 st.title("VAM Content Generator")
 st.markdown("Generate professional content in multiple formats for your topic.")
 
+professional_experience = st.text_input("Enter your professional experience", placeholder="e.g., Engineer, with 10 years of experience in the field of data science and machine learning", value="Engineer, with 8 years of experience in manufacturing and more than 3 years of experience in data science and machine learning")
+interests = st.text_input("Enter your interests", placeholder="e.g., data science, machine learning, artificial intelligence, cloud computing, marketing, etc.", value="data science, machine learning, artificial intelligence, automation, python")
+audience = st.text_input("Enter your audience", placeholder="e.g., founders, investors, entrepreneurs, etc.", value="general public")
+context = ("professional experience: " + professional_experience + " interests: " + interests + " audience: " + audience)
 
 # Input section
 with st.container():
@@ -158,7 +164,7 @@ if st.button("Generate Content", disabled=not topic):
             elif output_format == "Carousel":
                 try:
                     logger.info("Generating carousel presentation")
-                    carousel_content = generate_carousel_content(topic, language, carousel_type=carousel_type)
+                    carousel_content = generate_carousel_content(topic, language, carousel_type=carousel_type, context=context)
                     
                     # Get template path based on selection
                     if template_option == "Upload Custom Template":
@@ -189,13 +195,13 @@ if st.button("Generate Content", disabled=not topic):
             elif output_format == "LinkedIn Post":
                 logger.info("Generating LinkedIn post") #this is the post that will be generated
                 custom_post_content = custom_post if post_type == "set custom" else None
-                linkedin_post = generate_linkedin_post(topic, language, custom_post_content)
+                linkedin_post = generate_linkedin_post(topic, language, custom_post_content, context=context)
                 st.session_state.generated_content['linkedin'] = linkedin_post
                 logger.info("Successfully generated LinkedIn post")
 
             elif output_format == "Ideas":
                 logger.info("Generating content ideas")
-                ideas = generate_ideas(topic, language)
+                ideas = generate_ideas(topic, language, context=context)
                 st.session_state.generated_content['ideas'] = ideas
                 logger.info("Successfully generated content ideas")
 
