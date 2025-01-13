@@ -148,10 +148,10 @@ def generate_image_caption(image_description: str, max_length: int = 50) -> str:
         raise Exception(error_msg)
 
 example_posts = """
-Ejemplo 1 (Inglés)
-"I’ve grown my network to 36K+ in 2024
+Ejemplo 1
+"Ive grown my network to 36K+ in 2024
 
-Here’s how you can build yours in 2025:
+Heres how you can build yours in 2025:
 
 1. Start with likes
 ↳ Likes are the easiest way to get noticed
@@ -171,16 +171,16 @@ Here’s how you can build yours in 2025:
 6. Team up
 ↳ Collaborate on posts to reach new people
 
-Networking isn’t just adding numbers.
+Networking isnt just adding numbers.
 
-It’s building relationships that matter.
+Its building relationships that matter.
 
 P.S. Want to grow on LinkedIn?
 
 Follow me → Daniel"
 
 
-Ejemplo 2 (Español)
+Ejemplo 2
 "Nunca hay que parar de formarse...
 
 
@@ -208,23 +208,23 @@ Hay que actuar, pero hay que formarse también.
 Si puedes evitar cagarla, mejor ;)"
 
 
-Ejemplo 3 (Inglés)
+Ejemplo 3
 "The right niche attracts the right audience.
 
 Here's how to find yours in 5 steps:
 
-Most people on LinkedIn blend in because they’re trying to appeal to everyone.
+Most people on LinkedIn blend in because theyre trying to appeal to everyone.
 
 But the truth is:
 
 When you speak to everyone
 ↳ You connect with no one
 
-So finding your niche isn’t limiting.
+So finding your niche isnt limiting.
 
-→ It’s freeing
+→ Its freeing
 
-Here’s how you can do it ↓
+Heres how you can do it ↓
 
 1. Identify your expertise
 - What skills set me apart?
@@ -243,7 +243,7 @@ Here’s how you can do it ↓
 
 4. Describe your solution
 - What result do I deliver?
-- What’s my proven method?
+- Whats my proven method?
 - Why is my approach special?
 
 5. Test and refine
@@ -251,14 +251,13 @@ Here’s how you can do it ↓
 - Am I attracting ideal clients?
 - What feedback am I getting?
 
-Don’t try to be everything to everyone.
+Dont try to be everything to everyone.
 
 Be exactly what your audience needs.
 
 ♻️ Repost to help others find their niche"
 
-Ejemplo 4 (Español)
-"
+Ejemplo 4
 "Así es la realidad de emprender…
 ❌ No empecé con dinero
 ❌ No sabía cómo empezar
@@ -270,7 +269,72 @@ Ejemplo 4 (Español)
 ✅ Me he pasado muchas horas trabajando duro
 
 📌 Si te ha gustado, sígueme para más contenido auténtico."
-"
+
+
+Ejemplo 5
+"BREAKING: Google just launched their AI "Whisk".
+
+& it looks like the best AI image generator:
+
+Whisk is a new Google Labs experiment that lets you prompt using images for a fast creative process.
+
+This is best explained by Thomas Iljic, Director of Product Management, Google Labs:
+
+"Instead of generating images with long, detailed text prompts, Whisk lets you prompt with images. Simply drag in images, and start creating."
+
+Here are 7 ways Whisk changes the creative game:
+
+1. Easy to Use
+↳ Just drag and drop images.
+↳ No need for long text prompts.
+
+2. Mix and Match
+↳ Input images for subject, scene, and style.
+↳ Create something uniquely your own.
+
+3. Fast Results
+↳ Get instant image generation.
+↳ No waiting around for results.
+
+4. Endless Possibilities
+↳ From digital plushies to enamel pins.
+↳ Your creativity has no limits.
+
+5. AI-Powered
+↳ Uses Googles latest image generation model, Imagen 3.
+↳ Captures the essence of your subject.
+
+6. Editable Prompts
+↳ View and edit underlying prompts anytime.
+↳ Ensure your project meets your expectations.
+
+7. Creative Exploration
+↳ Built for rapid visual exploration.
+↳ Not a traditional image editor.
+
+♻️ Repost this if you agree."
+
+
+Ejemplo 6
+"Google is crushing OpenAI.
+
+1. Veo 2's videos are much better than Sora.
+2. Google released Gemini-2.0-thinking (like o1).
+3. But also Whisk, Gemini 2.0 flash, real-time AI...
+
+But this post is about Veo 2.
+
+☑ Longer Videos.
+☑ 4K Resolution: Crystal clear visuals.
+☑ Multiple characters, lifelike interactions.
+☑ Smooth and professional camera handling.
+
+Google is stealing the show from OpenAI. 
+
+They are winning the AI race.
+
+♻️ Repost this if you agree."
+
 """
 
 @lru_cache(maxsize=50)
@@ -322,7 +386,7 @@ def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_
             model=OPENAI_MODEL,
             messages=messages,
             max_tokens=MAX_TOKENS,
-            temperature=0.7
+            temperature=0.45
         )
         
         if not response.choices:
