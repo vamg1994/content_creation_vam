@@ -71,7 +71,7 @@ def generate_images(topic: str, limit: int = 3) -> List[ImageResponse]:
             response = openai.images.generate(
                 model=DALLE_MODEL,
                 prompt=f"Professional, high-quality image representing: {topic}. "
-                       f"Ensure the image is clear, well-composed, and suitable for business presentations.",
+                       f"Ensure the image is clear, well-composed, and suitable for business presentations. Avoid using words or phrases. Make it simple and easy to understand",
                 n=1,
                 size=DEFAULT_IMAGE_SIZE,
                 quality="standard",
@@ -127,7 +127,8 @@ def generate_image_caption(image_description: str, max_length: int = 50) -> str:
                     "role": "system",
                     "content": ("Create a professional, engaging, and concise caption "
                               "that highlights the key aspects of the image. "
-                              "The caption should be suitable for business presentations.")
+                              "The caption should be suitable for business presentations."
+                              )
                 },
                 {"role": "user", "content": f"Generate a caption for: {image_description}"}
             ],
@@ -534,7 +535,7 @@ def generate_ideas(topic: str, language: str = DEFAULT_LANGUAGE, context: str = 
                     "role": "system",
                     "content": (
                         f"Generate relevant ideas: Provide 3 creative approaches to the topic, considering storytelling, lists, or reflections."
-                        f"Condider this context: {context}\n"
+                        f"Consider this context: {context}\n"
                         f"Write everything (ideas, hook, CTA) in this language:{language_instruction} "
                         "Create a strong hook: Suggest 2-3 opening lines designed to capture immediate attention."
                         "Call to action: Include a CTA that encourages interaction or invites reflection. Suggest 2-3 closing lines"

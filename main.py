@@ -67,12 +67,17 @@ with st.sidebar:
 # Title and description
 st.title("VAM Content Generator")
 st.markdown("Generate professional content in multiple formats for your topic.")
+st.markdown("""
+    ### Context Section
+    """)
 
-professional_experience = st.text_input("Enter your professional experience", placeholder="e.g., Engineer, with 10 years of experience in the field of data science and machine learning", value="Engineer, with 8 years of experience in manufacturing and more than 3 years of experience in data science and machine learning")
+professional_experience = st.text_input("Enter your professional experience and accomplishments", placeholder="e.g., Engineer, with 10 years of experience in the field of data science and machine learning", value="Engineer, with 8 years of experience in manufacturing and more than 3 years of experience in data science and machine learning")
 interests = st.text_input("Enter your interests", placeholder="e.g., data science, machine learning, artificial intelligence, cloud computing, marketing, etc.", value="data science, machine learning, artificial intelligence, automation, python")
 audience = st.text_input("Enter your audience", placeholder="e.g., founders, investors, entrepreneurs, etc.", value="general public")
 context = ("professional experience: " + professional_experience + " interests: " + interests + " audience: " + audience)
-
+st.markdown("""
+    ### Input Section
+    """)
 # Input section
 with st.container():
     col1, col2 = st.columns(2)
@@ -81,7 +86,7 @@ with st.container():
     with col2:
         language = st.selectbox(
             "Select language",
-            ["English", "Spanish (Honduras)"],
+            ["English", "Spanish (Honduras)", "Spanish (Spain)","French", "German", "Italian"],
             index=0
         )
     col3, col4 = st.columns(2)
