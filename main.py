@@ -64,6 +64,8 @@ with st.sidebar:
     st.markdown("""
     ### Enter context for better results
     """)
+    
+"""
     with st.container():
         experience = st.text_input("Enter your professional experiece", placeholder="e.g., Engineer with 10 years of experience in AWS",default="")
         achievements = st.text_input("Enter your achievements", placeholder="e.g., I won the hackathon in 2024, I built a startup named VAM, I build a AI tool to generate content",default="")
@@ -72,7 +74,7 @@ with st.sidebar:
     
         context = f"Experience: {experience}\nAchievements: {achievements}\nInterests: {interests}\nAudience: {audience}"
         st.session_state.generated_content['context'] = context
-
+"""
 # Title and description
 st.title("VAM Content Generator")
 st.markdown("Generate professional content in multiple formats for your topic.")
