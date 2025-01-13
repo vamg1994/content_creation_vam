@@ -64,10 +64,13 @@ with st.sidebar:
     st.markdown("""
     ### Enter context for better results
     """)
-    experience = st.text_input("Enter your professional experiece", placeholder="e.g., Engineer with 10 years of experience in AWS",default="")
-    achievements = st.text_input("Enter your achievements", placeholder="e.g., I won the hackathon in 2024, I built a startup named VAM, I build a AI tool to generate content",default="")
-    interests = st.text_input("Enter your interests", placeholder="e.g., I'm interested in AI, Machine Learning, Data Science, Cloud Computing, Startups, Entrepreneurship, etc.",default="general interests")
-    audience = st.text_input("Enter your audience", placeholder="e.g., general public, tech enthusiasts, entrepreneurs, founders, etc.",default="general public")
+    with st.container():
+        col1 = st.columns(1)
+        with col1:
+            experience = st.text_input("Enter your professional experiece", placeholder="e.g., Engineer with 10 years of experience in AWS",default="")
+            achievements = st.text_input("Enter your achievements", placeholder="e.g., I won the hackathon in 2024, I built a startup named VAM, I build a AI tool to generate content",default="")
+            interests = st.text_input("Enter your interests", placeholder="e.g., I'm interested in AI, Machine Learning, Data Science, Cloud Computing, Startups, Entrepreneurship, etc.",default="general interests")
+            audience = st.text_input("Enter your audience", placeholder="e.g., general public, tech enthusiasts, entrepreneurs, founders, etc.",default="general public")
     
     context = f"Experience: {experience}\nAchievements: {achievements}\nInterests: {interests}\nAudience: {audience}"
 
