@@ -256,6 +256,21 @@ Don’t try to be everything to everyone.
 Be exactly what your audience needs.
 
 ♻️ Repost to help others find their niche"
+
+Ejemplo 4 (Español)
+"
+"Así es la realidad de emprender…
+❌ No empecé con dinero
+❌ No sabía cómo empezar
+❌ Tenía mucho miedo
+
+¿Pero cómo lo he hecho?
+✅ Me he centrado en una habilidad
+✅ He tomado acción
+✅ Me he pasado muchas horas trabajando duro
+
+📌 Si te ha gustado, sígueme para más contenido auténtico."
+"
 """
 
 @lru_cache(maxsize=50)
@@ -282,18 +297,15 @@ def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_
             {
                 "role": "system",
                 "content": (
-                    f"Act as a writing specialist for LinkedIn posts and create an engaging LinkedIn post {language_prompt}. "
-                    "The post should be engaging, informative, and follow "
-                    "Do not use hashtags "
-                    "Use short phrases and sentences, do not use paragraphs"
+                    f"Act as a writing specialist for LinkedIn posts and create an engaging LinkedIn post in this language: {language_prompt}. "
+                    "Use short phrases and lists, do not use paragraphs"
                     "Use clear and concise language"
                     "Avoid using cliches or overused phrases. "
                     "Avoid being too salesy or promotional. Use a human and conversational tone."
                     "CTA should be a reflection of the post or a conclusion, not a sales pitch. "
-                    "CTA could also have relective questions to the post. "
-                    "At the end of the post, add: 'Follow me → {your name}'"
+                    "At the end of the post, add: 'Follow me → {your name}' or 'Sigueme para mas → {tu nombre}'"
                     "Use little emojis to make the post more engaging for example--> ❌,✅,📌,♻️"
-                    "Use this examples as a reference for the style, tone and format: {example_posts}"
+                    "Use this examples as a reference for the style and tone: {example_posts}"
                 )
             }
         ]
