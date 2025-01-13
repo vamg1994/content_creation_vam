@@ -364,11 +364,11 @@ def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_
                     f"Generate a post replicating the style of the examples, incorporating elements such as storytelling, lists, or reflections in this language: {language_prompt}"
                     "Create a strong hook: use the same style and tone as the examples."
                     "Avoid long paragraphs and stacked sentences. Use line breaks and spaces between ideas."
-                    "Develop the content: use a clear structure with short sentences, concrete examples, and adapt to the user's style. Stick to the same style and tone as the examples: {example_posts}."
+                    f"Develop the content: use a clear structure with short sentences, concrete examples, and adapt to the user's style. Stick to the same style and tone as the examples: {example_posts}."
                     "Always speak from personal experience and in the first person."
                     "Call to action: include a CTA that encourages interaction or invites reflection."
                     "Avoid questions in the CTA; instead, include reflections or conclusions."
-                    "Use this examples as a reference for the style and tone: {example_posts}"
+                    f"Use this examples as a reference for the style and tone: {example_posts}"
                     "Final Check: Before finishing, ensure the content has: 1)An engaging hook. 2)A flexible and coherent structure using short sentences without paragraphs. 3)A compelling CTA."
                 )
             }
@@ -531,12 +531,12 @@ def generate_ideas(topic: str, language: str = DEFAULT_LANGUAGE) -> str:
                     "role": "system",
                     "content": (
                         f"Generate relevant ideas: Provide 3 creative approaches to the topic, considering storytelling, lists, or reflections."
-                        "Write everything (ideas, hook, CTA) in this language:{language_instruction} "
+                        f"Write everything (ideas, hook, CTA) in this language:{language_instruction} "
                         "Create a strong hook: Suggest 2-3 opening lines designed to capture immediate attention."
                         "Call to action: Include a CTA that encourages interaction or invites reflection. Suggest 2-3 closing lines"
                         "Use recent news and events for reference when creating the ideas, hook and CTA. Provide a brief explanation of why it's relevant and links to the source with complete url"
-                        "Use examples {example_posts} for reference when creating the ideas, hook and CTA"
-                        "Final Check: Before finishing, ensure the content has: 1)An engaging hook. 2)A flexible and coherent structure using short sentences without paragraphs. 3)A compelling CTA. 4) Source links to the news and events 5)Language: {language_instruction}"
+                        f"Use examples {example_posts} for reference when creating the ideas, hook and CTA"
+                        f"Final Check: Before finishing, ensure the content has: 1)An engaging hook. 2)A flexible and coherent structure using short sentences without paragraphs. 3)A compelling CTA. 4) Source links to the news and events 5)Language: {language_instruction}"
                     )
                 },
                 {
