@@ -536,7 +536,7 @@ def generate_ideas(topic: str, language: str = DEFAULT_LANGUAGE) -> str:
                         "Call to action: Include a CTA that encourages interaction or invites reflection. Suggest 2-3 closing lines"
                         "Use recent news and events for reference when creating the ideas, hook and CTA. Provide a brief explanation of why it's relevant and links to the source with complete url"
                         "Use examples {example_posts} for reference when creating the ideas, hook and CTA"
-                        "Final Check: Before finishing, ensure the content has: 1)An engaging hook. 2)A flexible and coherent structure using short sentences without paragraphs. 3)A compelling CTA. "
+                        "Final Check: Before finishing, ensure the content has: 1)An engaging hook. 2)A flexible and coherent structure using short sentences without paragraphs. 3)A compelling CTA. 4) Source links to the news and events 5)Language: {language_instruction}"
                     )
                 },
                 {
