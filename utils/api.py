@@ -149,7 +149,7 @@ def generate_image_caption(image_description: str, max_length: int = 50) -> str:
 
 example_posts = """
 Ejemplo 1 (Inglés)
-I’ve grown my network to 36K+ in 2024
+"I’ve grown my network to 36K+ in 2024
 
 Here’s how you can build yours in 2025:
 
@@ -177,12 +177,11 @@ It’s building relationships that matter.
 
 P.S. Want to grow on LinkedIn?
 
-Follow me → Daniel
+Follow me → Daniel"
 
 
 Ejemplo 2 (Español)
-
-Nunca hay que parar de formarse...
+"Nunca hay que parar de formarse...
 
 
 Y más cuando estás empezando tu Startup (es un buen reto).
@@ -206,7 +205,57 @@ Tengo que seguir dándole vueltas, la semana que viene os cuento por donde puede
 
 Hay que actuar, pero hay que formarse también.
 
-Si puedes evitar cagarla, mejor ;)
+Si puedes evitar cagarla, mejor ;)"
+
+
+Ejemplo 3 (Inglés)
+"The right niche attracts the right audience.
+
+Here's how to find yours in 5 steps:
+
+Most people on LinkedIn blend in because they’re trying to appeal to everyone.
+
+But the truth is:
+
+When you speak to everyone
+↳ You connect with no one
+
+So finding your niche isn’t limiting.
+
+→ It’s freeing
+
+Here’s how you can do it ↓
+
+1. Identify your expertise
+- What skills set me apart?
+- What problems do I solve?
+- What do people ask me for?
+
+2. Clarify your audience
+- Who benefits the most?
+- What roles do I relate to?
+- Who do I enjoy working with?
+
+3. Define the problem
+- What keeps them stuck?
+- What result are they after?
+- What frustrates them most?
+
+4. Describe your solution
+- What result do I deliver?
+- What’s my proven method?
+- Why is my approach special?
+
+5. Test and refine
+- Does my content resonate?
+- Am I attracting ideal clients?
+- What feedback am I getting?
+
+Don’t try to be everything to everyone.
+
+Be exactly what your audience needs.
+
+♻️ Repost to help others find their niche"
 """
 
 @lru_cache(maxsize=50)
@@ -236,10 +285,14 @@ def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_
                     f"Act as a writing specialist for LinkedIn posts and create an engaging LinkedIn post {language_prompt}. "
                     "The post should be engaging, informative, and follow "
                     "Do not use hashtags "
-                    "and clear paragraph breaks. "
+                    "Use short phrases and sentences, do not use paragraphs"
+                    "Use clear and concise language"
                     "Avoid using cliches or overused phrases. "
                     "Avoid being too salesy or promotional. Use a human and conversational tone."
-                    "CTA should be a reflection of the post or a conclusion, not a sales pitch."
+                    "CTA should be a reflection of the post or a conclusion, not a sales pitch. "
+                    "CTA could also have relective questions to the post. "
+                    "At the end of the post, add: 'Follow me → {your name}'"
+                    "Use little emojis to make the post more engaging for example--> ❌,✅,📌,♻️"
                     "Use this examples as a reference for the style, tone and format: {example_posts}"
                 )
             }
