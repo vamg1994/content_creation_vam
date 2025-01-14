@@ -39,6 +39,31 @@ st.markdown("""
         margin: 1rem 0;
        
 
+    /* Add these new styles */
+    .stContainer {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid #dee2e6;
+        margin-bottom: 1rem;
+    }
+    
+    .stTextInput > div > div > input {
+        background-color: white;
+    }
+    
+    .stTextArea > div > div > textarea {
+        background-color: white;
+    }
+    
+    .element-container {
+        background-color: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+    </style>
 """, unsafe_allow_html=True)
 
 # Initialize session state
@@ -235,6 +260,76 @@ if output_format == "Images":
 elif output_format == "Carousel":
     st.subheader("🎯 Carousel Presentation")
     if st.session_state.generated_content['carousel']:
+        # Store carousel_content in session state when it's generated
+        if 'carousel_content' not in st.session_state:
+            st.session_state.carousel_content = carousel_content
+            
+        with st.expander("Edit Carousel Slides", expanded=True):
+            edited_slides = []
+            for idx, slide in enumerate(st.session_state.carousel_content):
+                st.markdown(f"### Slide {idx + 1}")
+                with st.container():
+                    col1, col2 = st.columns([3, 1])
+                    with col1:
+                        # Create a card-like container for each slide
+                        with st.container():
+                            st.markdown("##### Title")
+                            edited_title = st.text_input(
+                                "Edit title",
+                                value=slide['title'],
+                                key=f"title_{idx}"
+                            )
+                            
+                            st.markdown("##### Content")
+                            points_text = "\n".join(slide['points'])
+                            edited_points = st.text_area(
+                                "Edit points (one per line)",
+                                value=points_text,
+                                height=150,
+                                key=f"points_{idx}"
+                            )
+                            
+                            edited_points_list = [p.strip() for p in edited_points.split('\n') if p.strip()]
+                            
+                            edited_slides.append({
+                                'title': edited_title,
+                                'points': edited_points_list
+                            })
+                    
+                    with col2:
+                        st.markdown("##### Preview")
+                        st.markdown(f"**{edited_title}**")
+                        for point in edited_points_list:
+                            st.markdown(f"• {point}")
+                    
+                st.markdown("---")
+            
+            # Store the edited slides in session state
+            st.session_state.edited_slides = edited_slides
+            
+            # Update the presentation with edited content
+            if st.button("Update Presentation", key="update_presentation"):
+                try:
+                    # Get template path based on selection
+                    if template_option == "Upload Custom Template":
+                        if not uploaded_file:
+                            raise Exception("Please upload a PowerPoint template first")
+                        template_path = os.path.join("templates", uploaded_file.name)
+                    else:
+                        template_path = os.path.join("templates", f"{template}.pptx")
+                    
+                    # Create updated presentation using edited_slides
+                    updated_presentation = create_carousel_presentation(topic, st.session_state.edited_slides, template_path)
+                    
+                    # Save presentation to bytes
+                    pptx_bytes = io.BytesIO()
+                    updated_presentation.save(pptx_bytes)
+                    st.session_state.generated_content['carousel'] = pptx_bytes.getvalue()
+                    st.success("Presentation updated successfully!")
+                except Exception as e:
+                    st.error(f"Error updating presentation: {str(e)}")
+        
+        # Download button - will use the most recently updated content
         st.download_button(
             label="Download Presentation",
             data=st.session_state.generated_content['carousel'],
