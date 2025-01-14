@@ -13,10 +13,31 @@ from utils.api import (
 )
 from utils.ppt import create_carousel_presentation
 from utils.template_manager import initialize_templates, get_available_templates
+from pptx import Presentation
+
+# Add these constants near the top of the file with other constants/configurations
+DEFAULT_NUM_SLIDES = 6  # or whatever default number you want
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+def get_template_slide_count(template_path: str) -> int:
+    """
+    Get the number of slides in the PowerPoint template.
+    
+    Args:
+        template_path: Path to the PowerPoint template
+        
+    Returns:
+        Number of slides in the template
+    """
+    try:
+        prs = Presentation(template_path)
+        return len(prs.slides)
+    except Exception as e:
+        logger.error(f"Error reading template slides: {str(e)}")
+        return 0
 
 # Configure page
 st.set_page_config(
@@ -193,16 +214,33 @@ if st.button("Generate Content", disabled=not topic):
 
             elif output_format == "Carousel":
                 try:
-                    logger.info("Generating carousel presentation")
-                    carousel_content = generate_carousel_content(topic, language, carousel_type=carousel_type, context=context)
-                    
-                    # Get template path based on selection
+                    # Get template path and slide count before generating content
                     if template_option == "Upload Custom Template":
                         if not uploaded_file:
                             raise Exception("Please upload a PowerPoint template first")
                         template_path = os.path.join("templates", uploaded_file.name)
                     else:
                         template_path = os.path.join("templates", f"{template}.pptx")
+                    
+                    # Get number of slides in template
+                    template_slide_count = get_template_slide_count(template_path)-2
+                    if template_slide_count == 0:
+                        st.error("Invalid template or no slides found in template")
+                        st.stop()
+                        
+                    # Adjust num_slides to match template
+                    num_slides = template_slide_count
+                    st.info(f"Generating {num_slides} slides to match template capacity")
+                    
+                    logger.info("Generating carousel presentation")
+                    carousel_content = generate_carousel_content(
+                        topic, 
+                        language, 
+                        num_slides=num_slides,
+                        carousel_type=carousel_type, 
+                        context=context
+                    )
+                    st.session_state.carousel_content = carousel_content
                     
                     # Verify template exists
                     if not os.path.exists(template_path):

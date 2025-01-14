@@ -413,12 +413,11 @@ def generate_carousel_content(
 ) -> List[SlideContent]:
     """
     Generate content for carousel slides using OpenAI.
-    Uses caching to avoid regenerating identical requests.
     
     Args:
         topic: The subject matter for the carousel
         language: Target language for the content
-        num_slides: Number of slides to generate
+        num_slides: Number of slides to generate (will be limited by template)
         carousel_type: Type of content structure for each slide
         
     Returns:
@@ -496,6 +495,9 @@ def generate_carousel_content(
         if not validated_slides:
             raise ValueError("No valid slides were generated")
             
+        # Ensure we only return the requested number of slides
+        validated_slides = validated_slides[:num_slides]
+        
         logger.info(f"Successfully generated {len(validated_slides)} slides")
         return validated_slides
         
