@@ -549,7 +549,7 @@ def generate_ideas(topic: str, language: str = DEFAULT_LANGUAGE, context: str = 
                 },
                 {
                     "role": "user",
-                    "content": f"Generate content ideas for: {topic}"
+                    "content": f"Generate content ideas for: {topic} in this language:{language_instruction}"
                 }
             ],
             "temperature": 0.7,
