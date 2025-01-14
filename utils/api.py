@@ -371,7 +371,7 @@ def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_
                     "Avoid questions in the CTA; instead, include reflections or conclusions."
                     f"Use this examples as a reference for the style and tone: {example_posts}"
                     f"Adapt the content to this specific context: {context}"
-                    "Final Check: Before finishing, ensure the content has: 1)An engaging hook. 2)A flexible and coherent structure using short sentences without paragraphs. 3)A compelling CTA."
+                    "Final Check: Before finishing, ensure the content has: 1)An engaging hook. 2)A flexible and coherent structure using short sentences without paragraphs. 3)A compelling CTA. 4) Always talk from personal experience and in the first person."
                 )
             }
         ]
