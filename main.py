@@ -104,8 +104,13 @@ with st.sidebar:
     st.markdown("""
     ### Virgilio Madrid
     ### Data Scientist
-    ### virgiliomadrid1994@gmail.com
-    ### https://www.linkedin.com/in/vamadrid/
+    """)
+    st.link_button("LinkedIn 💼", "https://www.linkedin.com/in/vamadrid/")
+    st.link_button("Tutorial 📺", "")
+    st.link_button("Email 📧", "mailto:virgiliomadrid1994@gmail.com")
+    st.info("""
+    ### VAM Content Generator
+    Is a tool that helps you create: LinkedIn posts, LinkedIn carousel presentations, images and generate ideas.
     """)
     
 
@@ -117,8 +122,8 @@ st.markdown("""
     ### Context Section
     """)
 
-professional_experience = st.text_input("Enter your professional experience and accomplishments", placeholder="e.g., Engineer, with 10 years of experience in the field of data science and machine learning", value="Engineer, MBA, and master in AI, skilled in data science, automation with python and artificial intelligence. Building AI solutions for saving time and money")
-interests = st.text_input("Enter your interests", placeholder="e.g., data science, machine learning, artificial intelligence, cloud computing, marketing, etc.", value="data science, machine learning, artificial intelligence, automation, python")
+professional_experience = st.text_area("Enter your professional experience and accomplishments", placeholder="e.g., Engineer, with 10 years of experience in the field of data science and machine learning", value="Engineer, MBA, and master in AI, skilled in data science, automation with python and artificial intelligence. Building AI solutions for saving time and money")
+interests = st.text_area("Enter your interests", placeholder="e.g., data science, machine learning, artificial intelligence, cloud computing, marketing, etc.", value="data science, machine learning, artificial intelligence, automation, python")
 audience = st.text_input("Enter your audience", placeholder="e.g., founders, investors, entrepreneurs, etc.", value="general public")
 context = ("professional experience: " + professional_experience + " interests: " + interests + " audience: " + audience)
 st.markdown("""
@@ -371,8 +376,8 @@ elif output_format == "Carousel":
         st.download_button(
             label="Download Presentation",
             data=st.session_state.generated_content['carousel'],
-            file_name=f"{topic.replace(' ', '_')}_presentation.pptx",
-            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            file_name="presentation.pptx",
+            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation" #this is the file type for pptx
         )
 
 
@@ -403,3 +408,4 @@ elif output_format == "Ideas":
 # Footer
 st.markdown("---")
 st.markdown("VAM Content Creation Tool")
+

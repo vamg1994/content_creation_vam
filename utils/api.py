@@ -336,6 +336,58 @@ They are winning the AI race.
 
 ♻️ Repost this if you agree."
 
+Ejemplo 7
+"BREAKING: Stanford released an AI, Co-Storm.
+
+It's disrupting research (with AI):
+
+Turn a prompt into a detailed, citation-rich article.
+
+3 key features of Co-STORM:
+
+1. Collaborative Human-AI Interaction
+↳ Engage with AI agents during content creation.
+
+2. Dynamic Roundtable Discussion
+↳ Multiple AI agents simulate a roundtable.
+
+3. Concept-Oriented Mind Map
+↳ Visualize and explore curated knowledge easily.
+
+But here's the kicker: Collaboration is key.
+
+It features:
+→ Dynamic AI roundtable discussions
+→ Unique perspectives from multiple AI agents
+
+Users can:
+→ Inject their own inputs
+→ Steer the conversation
+→ Request deeper exploration
+
+This approach ensures:
+→ Diverse content
+→ Balanced articles
+→ Tailored knowledge
+
+Additionally, Co-STORM offers a dynamic mind map:
+→ Structures retrieved information
+→ Creates concept-oriented hierarchies
+
+This visual tool:
+→ Enhances understanding
+→ Facilitates deeper engagement
+
+Remember, Co-STORM is more than an upgrade.
+
+It's a powerful tool to:
+→ Explore
+→ Curate
+→ Create
+
+Definitely a massive step in AI collaborative research.
+
+♻️ Repost this if you agree."
 """
 
 @lru_cache(maxsize=50)
@@ -379,7 +431,7 @@ def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_
         if custom_post:
             messages.append({
                 "role": "system",
-                "content": f"Use this post as inspiration for the style and format, mantaining the same rythm, tone and use correct spacing between each line: {custom_post}"
+                "content": f"Use this post as inspiration for the style and format, mantaining the same rythm, tone and use correct spacing between each line: {custom_post}. Also adapt the content to this specific context: {context}"
             })
 
         messages.append({"role": "user", "content": f"Write a LinkedIn post about: {topic}"})
