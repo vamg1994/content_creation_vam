@@ -106,7 +106,7 @@ with st.sidebar:
     ### Data Scientist
     """)
     st.link_button("LinkedIn 💼", "https://www.linkedin.com/in/vamadrid/")
-    st.link_button("Tutorial 📺", "https://content-generator-vam.streamlit.app/")
+    st.link_button("Tutorial 📺", "https://share.descript.com/view/RZBrKJV7tMj")
     st.link_button("Email 📧", "mailto:virgiliomadrid1994@gmail.com")
     st.info("""
     ### VAM Content Generator
