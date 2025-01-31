@@ -20,8 +20,9 @@ DALLE_MODEL = "dall-e-3"
 DEFAULT_IMAGE_SIZE = "1024x1024"
 MAX_TOKENS = 2000
 DEFAULT_LANGUAGE = "English"
-DEFAULT_NUM_SLIDES = 10
+DEFAULT_NUM_SLIDES_SCRIPT = 10
 DEFAULT_CAROUSEL_TYPE = "3-4 bullet points"
+DEFAULT_VIDEO_LENGTH_MINUTES = 3
 
 class ImageResponse(TypedDict):
     url: str
@@ -459,7 +460,7 @@ def generate_linkedin_post(topic: str, language: str = DEFAULT_LANGUAGE, custom_
 def generate_carousel_content(
     topic: str,
     language: str = DEFAULT_LANGUAGE,
-    num_slides: int = DEFAULT_NUM_SLIDES,
+    num_slides: int = DEFAULT_NUM_SLIDES_SCRIPT,
     carousel_type: str = DEFAULT_CAROUSEL_TYPE,
     context: str = ""
 ) -> List[SlideContent]:
@@ -629,5 +630,73 @@ def generate_ideas(topic: str, language: str = DEFAULT_LANGUAGE, context: str = 
         
     except requests.exceptions.RequestException as e:
         error_msg = f"Failed to generate ideas via Perplexity API: {str(e)}"
+        logger.error(error_msg, exc_info=True)
+        raise Exception(error_msg)
+
+@lru_cache(maxsize=50)
+def generate_youtube_script(topic: str, language: str = DEFAULT_LANGUAGE, num_slides: int = DEFAULT_NUM_SLIDES_SCRIPT, video_length: int = DEFAULT_VIDEO_LENGTH_MINUTES, context: str = "") -> List[Dict]:
+    """
+    Generate a YouTube video script using OpenAI.
+    
+    Args:
+        topic: The subject matter for the video
+        language: Target language for the script
+        num_slides: Number of script sections/slides
+        video_length: Target video length in minutes
+        context: Additional context for script generation
+        
+    Returns:
+        List of dictionaries containing slide titles and script content
+    """
+    logger.info(f"Generating {num_slides}-slide YouTube script for {video_length} minute video about: {topic}")
+    
+    try:
+        language_prompt = ("in Spanish, using neutral dialect" 
+                         if language == "Spanish (Neutral)" else "in English")
+        
+        response = openai.chat.completions.create(
+            model=OPENAI_MODEL,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        f"Create a {video_length}-minute YouTube video script {language_prompt} divided into {num_slides} sections.\n"
+                        "Follow these guidelines:\n"
+                        f"1. Consider this context: {context}\n"
+                        f"2. Each section should be ~{(video_length * 60) // num_slides} seconds when spoken\n"
+                        "3. Use engaging, conversational language\n"
+                        "4. Include natural transitions between sections\n"
+                        "5. Add visual cues in [brackets].Always at the beginning of the section\n"
+                        "6. Start with a hook and end with a call-to-action\n"
+                        "7. Use storytelling\n"
+                        "8. Use examples\n" 
+                        "9. Always speak from personal experience and in the first person\n"
+                        "10. Use the same style and tone as Mr.Beast\n"
+                        "11. Include suggestions for each section, for example music, images, videos, etc.\n"
+                        "Return a JSON object with this structure:\n"
+                        '{"slides": [{"title": "string", "script": "string"}]}'
+                    )
+                },
+                {"role": "user", "content": f"Create a YouTube script about: {topic}"}
+            ],
+            response_format={"type": "json_object"},
+            max_tokens=MAX_TOKENS * 2,
+            temperature=0.85
+        )
+        
+        content = json.loads(response.choices[0].message.content)
+        
+        if not isinstance(content, dict) or 'slides' not in content:
+            raise ValueError("API response missing 'slides' array")
+            
+        slides = content['slides']
+        if not slides or not isinstance(slides, list):
+            raise ValueError("No script content was generated")
+            
+        logger.info(f"Successfully generated {len(slides)} script sections")
+        return slides
+        
+    except Exception as e:
+        error_msg = f"Failed to generate YouTube script: {str(e)}"
         logger.error(error_msg, exc_info=True)
         raise Exception(error_msg)

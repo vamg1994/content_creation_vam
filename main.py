@@ -9,7 +9,8 @@ from utils.api import (
     generate_image_caption,
     generate_linkedin_post,
     generate_carousel_content,
-    generate_ideas
+    generate_ideas,
+    generate_youtube_script
 )
 from utils.ppt import create_carousel_presentation
 from utils.template_manager import initialize_templates, get_available_templates
@@ -95,7 +96,8 @@ if 'generated_content' not in st.session_state:
         'images': None,
         'carousel': None,
         'linkedin': None,
-        'ideas': None
+        'ideas': None,
+        'youtube_script': None
     }
 
 
@@ -144,7 +146,7 @@ with st.container():
     with col3:
         output_format = st.selectbox(
             "Select output format",
-            ["Images", "Carousel", "LinkedIn Post", "Ideas"],
+            ["Images", "Carousel", "LinkedIn Post", "YouTube Script", "Ideas"],
             index=0,
             key="output_format"
         )
@@ -272,6 +274,16 @@ if st.button("Generate Content", disabled=not topic):
                 st.session_state.generated_content['linkedin'] = linkedin_post
                 logger.info("Successfully generated LinkedIn post")
 
+            elif output_format == "YouTube Script":
+                logger.info("Generating YouTube script")
+                script_content = generate_youtube_script(
+                    topic, 
+                    language,
+                    context=context
+                )
+                st.session_state.generated_content['youtube_script'] = script_content
+                logger.info("Successfully generated YouTube script")
+
             elif output_format == "Ideas":
                 logger.info("Generating content ideas")
                 ideas = generate_ideas(topic, language, context=context)
@@ -393,6 +405,59 @@ elif output_format == "LinkedIn Post":
                 mime="text/plain"
             )
             
+elif output_format == "YouTube Script":
+    st.subheader("🎥 YouTube Script")
+    if st.session_state.generated_content['youtube_script']:
+        with st.expander("Edit Script", expanded=True):
+            edited_slides = []
+            total_sections = len(st.session_state.generated_content['youtube_script'])
+            
+            for idx, slide in enumerate(st.session_state.generated_content['youtube_script']):
+                st.markdown(f"### Section {idx + 1}/{total_sections}")
+                
+                with st.container():
+                    # Create a card-like container for each section
+                    with st.container():
+                        st.markdown("##### Title")
+                        edited_title = st.text_input(
+                            "Edit section title",
+                            value=slide['title'],
+                            key=f"yt_title_{idx}"
+                        )
+                        
+                        st.markdown("##### Script")
+                        edited_script = st.text_area(
+                            "Edit script content",
+                            value=slide['script'],
+                            height=150,
+                            key=f"yt_script_{idx}"
+                        )
+                        
+                        edited_slides.append({
+                            'title': edited_title,
+                            'script': edited_script
+                        })
+                    
+                st.markdown("---")
+            
+            # Store the edited script in session state
+            st.session_state.edited_youtube_script = edited_slides
+            
+            # Download button for the script
+            if st.button("Download Script"):
+                script_text = ""
+                for idx, slide in enumerate(st.session_state.edited_youtube_script):
+                    script_text += f"\nSection {idx + 1}: {slide['title']}\n"
+                    script_text += f"{slide['script']}\n"
+                    script_text += "-" * 40 + "\n"
+                
+                st.download_button(
+                    label="Download Script as Text",
+                    data=script_text,
+                    file_name=f"{topic.replace(' ', '_')}_youtube_script.txt",
+                    mime="text/plain"
+                )
+
 elif output_format == "Ideas":
     st.subheader("💡 Content Ideas")
     if st.session_state.generated_content['ideas']:
