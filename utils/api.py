@@ -24,6 +24,17 @@ DEFAULT_NUM_SLIDES_SCRIPT = 10
 DEFAULT_CAROUSEL_TYPE = "3-4 bullet points"
 DEFAULT_VIDEO_LENGTH_MINUTES = 3
 
+SCRIPT_STYLES = {
+    "Mr. Beast": "energetic, enthusiastic, fast-paced, with dramatic hooks and high-energy delivery",
+    "Alex Hormozi": "direct, authoritative, value-driven, with clear actionable insights and business focus",
+    "Medical": "informative, educational, engaging, with real-life examples and practical advice, using medical terms and jargon. Specialize in medical care and medical treatments",
+    "Legal": "informative, educational, engaging, with real-life examples and practical advice, using legal terms and jargon. Specialize in laws, legal cases, and legal procedures",
+    "Financial": "informative, educational, engaging, with real-life examples and practical advice, using financial terms and jargon. Specialize in financial metrics, financial statements, and financial analysis",
+    "Tech": "informative, educational, engaging, with real-life examples and practical advice, using tech terms and jargon. Specialize in tech metrics, tech statements, and tech analysis",
+    "Geriatric": "informative, educational, engaging, with real-life examples and practical advice, using geriatric terms and jargon, using a friendly and approachable tone. Specialize in geriatric care and geriatric medicine",
+    "Custom": None
+}
+
 class ImageResponse(TypedDict):
     url: str
     description: str
@@ -634,7 +645,15 @@ def generate_ideas(topic: str, language: str = DEFAULT_LANGUAGE, context: str = 
         raise Exception(error_msg)
 
 @lru_cache(maxsize=50)
-def generate_youtube_script(topic: str, language: str = DEFAULT_LANGUAGE, num_slides: int = DEFAULT_NUM_SLIDES_SCRIPT, video_length: int = DEFAULT_VIDEO_LENGTH_MINUTES, context: str = "") -> List[Dict]:
+def generate_youtube_script(
+    topic: str, 
+    language: str = DEFAULT_LANGUAGE, 
+    num_slides: int = DEFAULT_NUM_SLIDES_SCRIPT, 
+    video_length: int = DEFAULT_VIDEO_LENGTH_MINUTES, 
+    script_style: str = "Mr. Beast",
+    custom_style_example: str = None,
+    context: str = ""
+) -> List[Dict]:
     """
     Generate a YouTube video script using OpenAI.
     
@@ -643,16 +662,23 @@ def generate_youtube_script(topic: str, language: str = DEFAULT_LANGUAGE, num_sl
         language: Target language for the script
         num_slides: Number of script sections/slides
         video_length: Target video length in minutes
+        script_style: Style of script (Mr. Beast, Alex Hormozi, or Custom)
+        custom_style_example: Example script for custom style
         context: Additional context for script generation
         
     Returns:
         List of dictionaries containing slide titles and script content
     """
-    logger.info(f"Generating {num_slides}-slide YouTube script for {video_length} minute video about: {topic}")
+    logger.info(f"Generating {num_slides}-slide YouTube script in {script_style} style")
     
     try:
         language_prompt = ("in Spanish, using neutral dialect" 
                          if language == "Spanish (Neutral)" else "in English")
+        
+        # Define style guidance based on selection
+        style_guidance = SCRIPT_STYLES.get(script_style, "")
+        if script_style == "Custom" and custom_style_example:
+            style_guidance = f"Use this example as reference for style and tone:\n{custom_style_example}"
         
         response = openai.chat.completions.create(
             model=OPENAI_MODEL,
@@ -666,12 +692,12 @@ def generate_youtube_script(topic: str, language: str = DEFAULT_LANGUAGE, num_sl
                         f"2. Each section should be ~{(video_length * 60) // num_slides} seconds when spoken\n"
                         "3. Use engaging, conversational language\n"
                         "4. Include natural transitions between sections\n"
-                        "5. Add visual cues in [brackets].Always at the beginning of the section\n"
+                        "5. Add visual cues in [brackets]\n"
                         "6. Start with a hook and end with a call-to-action\n"
                         "7. Use storytelling\n"
-                        "8. Use examples\n" 
+                        "8. Use examples\n"
                         "9. Always speak from personal experience and in the first person\n"
-                        "10. Use the same style and tone as Mr.Beast\n"
+                        f"10. {style_guidance}\n"
                         "11. Include suggestions for each section, for example music, images, videos, etc.\n"
                         "Return a JSON object with this structure:\n"
                         '{"slides": [{"title": "string", "script": "string"}]}'

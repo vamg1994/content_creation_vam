@@ -18,6 +18,8 @@ from pptx import Presentation
 
 # Add these constants near the top of the file with other constants/configurations
 DEFAULT_NUM_SLIDES = 6  # or whatever default number you want
+DEFAULT_VIDEO_LENGTH_MINUTES = 3
+DEFAULT_NUM_SLIDES_SCRIPT = 10
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -193,6 +195,48 @@ with st.container():
             
             if post_type == "set custom":
                 custom_post = st.text_area("Enter your custom LinkedIn post as inspiration", placeholder="e.g., Enter a post that you want to use as inspiration")
+        elif output_format == "YouTube Script":
+            col4_1, col4_2 = st.columns(2)
+            with col4_1:
+                script_style = st.selectbox(
+                    "Select script style",
+                    ["Mr. Beast", "Alex Hormozi", "Medical", "Legal", "Financial", "Tech", "Geriatric", "Custom"],
+                    index=0,
+                    key="script_style"
+                )
+            
+            custom_style_example = None
+            if script_style == "Custom":
+                with col4_2:
+                    custom_style_example = st.text_area(
+                        "Enter an example script to use as reference",
+                        placeholder="Paste a script example that shows the style you want to replicate...",
+                        height=150,
+                        key="custom_style_example"
+                    )
+                    st.info("The example script will be used as a reference for tone and style")
+            
+            # Add sliders for script settings
+            col4_3, col4_4 = st.columns(2)
+            with col4_3:
+                num_slides = st.slider(
+                    "Number of sections",
+                    min_value=5,
+                    max_value=10,
+                    value=DEFAULT_NUM_SLIDES_SCRIPT,
+                    step=1,
+                    help="Select the number of sections in your script"
+                )
+            with col4_4:
+                video_length = st.slider(
+                    "Video duration (minutes)",
+                    min_value=1,
+                    max_value=5,
+                    value=DEFAULT_VIDEO_LENGTH_MINUTES,
+                    step=1,
+                    help="Select the target video length in minutes"
+                )
+                st.info(f"Each section will be ~{(video_length * 60) // num_slides} seconds when spoken")
 # Generate button
 if st.button("Generate Content", disabled=not topic):
     with st.spinner("Generating content..."):
@@ -279,6 +323,10 @@ if st.button("Generate Content", disabled=not topic):
                 script_content = generate_youtube_script(
                     topic, 
                     language,
+                    num_slides=num_slides,
+                    video_length=video_length,
+                    script_style=script_style,
+                    custom_style_example=custom_style_example if script_style == "Custom" else None,
                     context=context
                 )
                 st.session_state.generated_content['youtube_script'] = script_content
